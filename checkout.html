@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Checkout — TechSelf Gadgets</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%232563EB' rx='6'/><text x='16' y='22' font-family='sans-serif' font-size='18' font-weight='900' fill='%23FFFFFF' text-anchor='middle'>T</text></svg>">
+  <link rel="stylesheet" href="src/styles/theme.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand"><div class="brand-icon">T</div><div><span class="brand-name">TechSelf</span><span class="brand-sub">Next-Gen Electronics</span></div></a>
+      <nav><ul class="nav-links"><li><a href="index.html" class="nav-link">Store</a></li><li><a href="products.html" class="nav-link">Gadgets</a></li><li><a href="about.html" class="nav-link">Engineering</a></li><li><a href="checkout.html" class="nav-link active">Checkout</a></li><li><a href="contact.html" class="nav-link">Support</a></li></ul></nav>
+    </div>
+  </header>
+
+  <div class="container" style="max-width:800px; padding:60px 24px 100px;">
+    <div style="text-align:center; margin-bottom:40px;">
+      <span class="section-tag">Encrypted SSL Order</span>
+      <h1 style="font-size:2.8rem; margin-bottom:12px;">Fast Checkout</h1>
+      <p style="color:var(--text-muted);">Enter shipping destination. Orders dispatched within 24 hours.</p>
+    </div>
+
+    <form id="checkout-form" onsubmit="handleOrderSubmit(event)" style="background:var(--bg-card); padding:40px; border-radius:var(--radius-lg); border:1px solid var(--border-subtle); box-shadow:var(--shadow-card);">
+      <div style="margin-bottom:20px;">
+        <label style="display:block; font-weight:700; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Recipient Full Name *</label>
+        <input type="text" name="name" required placeholder="Marcus Vance" style="width:100%; padding:14px; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:#FFF; border-radius:var(--radius-md); font-size:0.95rem; outline:none;">
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+        <div>
+          <label style="display:block; font-weight:700; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Email Address *</label>
+          <input type="email" name="email" required placeholder="marcus@domain.com" style="width:100%; padding:14px; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:#FFF; border-radius:var(--radius-md); font-size:0.95rem; outline:none;">
+        </div>
+        <div>
+          <label style="display:block; font-weight:700; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Phone Number *</label>
+          <input type="tel" name="phone" required placeholder="+1 (555) 019-9482" style="width:100%; padding:14px; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:#FFF; border-radius:var(--radius-md); font-size:0.95rem; outline:none;">
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="display:block; font-weight:700; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Shipping Delivery Address *</label>
+        <input type="text" name="address" required placeholder="742 Evergreen Terrace, San Francisco, CA" style="width:100%; padding:14px; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:#FFF; border-radius:var(--radius-md); font-size:0.95rem; outline:none;">
+      </div>
+
+      <div style="margin-bottom:28px;">
+        <label style="display:block; font-weight:700; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Delivery Notes (Optional)</label>
+        <textarea name="notes" rows="2" placeholder="Gate access code, courier delivery instructions..." style="width:100%; padding:14px; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:#FFF; border-radius:var(--radius-md); font-size:0.95rem; outline:none;"></textarea>
+      </div>
+
+      <button type="submit" id="order-btn" class="btn btn-blue" style="width:100%; padding:16px; font-size:1.05rem;">Place Express Order &rarr;</button>
+    </form>
+  </div>
+
+  <script src="src/services/api.js"></script>
+  <script>
+    async function handleOrderSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('order-btn');
+      btn.textContent = 'Transmitting Order to Warehouse...';
+
+      const cart = JSON.parse(localStorage.getItem('techself_cart') || '[]');
+      const summary = cart.map(i => `${i.title} (${i.qty})`).join(', ') || 'Quantum Spatial ANC Wireless Pro (1)';
+
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        service: 'Express Hardware Order',
+        requirement: `Items: ${summary} | Ship to: ${form.address.value}`,
+        lead_type: 'ORDER',
+        notes: form.notes.value
+      };
+
+      try {
+        const res = await ScaleNovaAPI.submitLead(data);
+        localStorage.removeItem('techself_cart');
+        form.innerHTML = `
+          <div style="text-align:center; padding:40px 10px;">
+            <div style="font-size:3.5rem; margin-bottom:16px;">📦</div>
+            <h2 style="color:var(--color-cyan); margin-bottom:12px;">Order Placed Successfully!</h2>
+            <p style="color:var(--text-muted); line-height:1.8; margin-bottom:24px;">Thank you, ${data.name}. Your tracking ref is <strong>${res.submission_id}</strong>. A tracking number will be sent to ${data.email} as soon as DHL packages your order.</p>
+            <a href="index.html" class="btn btn-blue">Return to TechSelf Store</a>
+          </div>
+        `;
+      } catch (err) {
+        alert('Order recorded in offline registry.');
+      }
+    }
+  </script>
+</body>
+</html>
