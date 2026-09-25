@@ -13,7 +13,26 @@
       <a href="index.html" class="brand"><div class="brand-icon">T</div><div><span class="brand-name">TechSelf</span><span class="brand-sub">Next-Gen Electronics</span></div></a>
       <nav><ul class="nav-links"><li><a href="index.html" class="nav-link">Store</a></li><li><a href="products.html" class="nav-link">Gadgets</a></li><li><a href="about.html" class="nav-link">Engineering</a></li><li><a href="checkout.html" class="nav-link active">Checkout</a></li><li><a href="contact.html" class="nav-link">Support</a></li></ul></nav>
     </div>
-  </header>
+  </header>\n
+  <!-- In-Window Breadcrumb & Front/Back Navigation -->
+  <div class="subpage-nav-bar">
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div style="display:flex; align-items:center; gap:8px; font-size:0.875rem;">
+        <button onclick="window.history.length > 1 ? window.history.back() : window.location.href=\'index.html\'" class="btn-subpage-back" aria-label="Navigate Back">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+        <span style="color:#94A3B8;">/</span>
+        <a href="index.html" style="color:#64748B; text-decoration:none; font-weight:500;">Home</a>
+        <span style="color:#94A3B8;">/</span>
+        <span style="color:#0F172A; font-weight:600;">Checkout</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button onclick="window.history.forward()" style="display:inline-flex; align-items:center; gap:4px; background:transparent; border:1px solid transparent; color:#64748B; padding:6px 10px; border-radius:6px; font-size:0.8rem; cursor:pointer;" title="Navigate Forward">Forward &rarr;</button>
+      </div>
+    </div>
+  </div>
+
 
   <div class="container" style="max-width:800px; padding:60px 24px 100px;">
     <div style="text-align:center; margin-bottom:40px;">
